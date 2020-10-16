@@ -13,7 +13,7 @@ import { paginate } from "../Utiles/paginate";
 
 const Toplearn = () => {
     const Courses = useSelector(state => state.courses);
-    const indexCourses = paginate(Courses, 1, 8);
+    const indexCourses = paginate(Courses, 1, 12);
     return (
         <MainLayout>
             <Switch>

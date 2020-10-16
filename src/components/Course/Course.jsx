@@ -20,7 +20,7 @@ const Course = ({ Courses }) => {
                                 <h2 />
                                 <Link to={`/course/${Course._id}`}> {Course.title} </Link>
                                 <h2 />
-                                <span>ssdsd رایگان </span>
+                                <span>رایگان </span>
                                 <i>1:52:32</i>
                             </article>
                         </div>
