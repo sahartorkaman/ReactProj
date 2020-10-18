@@ -20,7 +20,7 @@ const Toplearn = () => {
                 <Route path="/login" component={Login} />
                 <Route path="/register" component={Register} />
                 <Route path="/archive" component={Archive} />
-                <Route path="/course" component={SingleCourse} />
+                <Route path="/course/:id" component={SingleCourse} />
                 <Route path="/user-profile" component={UserProfile} />
                 {/* <Route path="/" exact component={Course} />
                  */}
