@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { render } from "react-dom";
-import { Provider } from "react-redux";
 import App from "./containers/App";
-import { store } from "./store";
+import { Provider } from "react-redux";
+import { store } from "./store/index";
 
-
-
-render(<Provider store={store} >
-    <App />
-</Provider>
-    , document.getElementById("root"));
+render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById("root")
+);

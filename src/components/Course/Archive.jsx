@@ -1,12 +1,11 @@
-import React from "react";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { paginate } from "../../Utiles/paginate";
+import React, { useState } from "react";
 import Pagination from "../common/Pagination";
+import { useSelector } from "react-redux";
+import { paginate } from "./../../utils/paginate";
 import Course from "./Course";
 
 const Archive = () => {
-    const [perPage] = useState(4);
+    const [perPage] = useState(12);
     const [currentPage, setCurrentPage] = useState(1);
 
     const courses = useSelector(state => state.courses);
@@ -157,7 +156,7 @@ const Archive = () => {
                 <div className="col-lg-9 col-md-8 col-sm-12 col-xs-12">
                     <section className="terms-items">
                         <div className="row">
-                            <Course Courses={archiveCourses} />
+                            <Course courses={archiveCourses} />
                         </div>
 
                         <Pagination
@@ -174,4 +173,3 @@ const Archive = () => {
 };
 
 export default Archive;
-

@@ -1,43 +1,22 @@
-import React, { useState } from "react";
-import { toast } from "react-toastify";
-import { registerUser } from "./../../services/userService";
+import React, { useContext } from "react";
+import Helmet from "react-helmet";
+import { context } from "./../context/context";
 
 const Register = () => {
-    const [fullname, setFullname] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const registerContext = useContext(context);
 
-    const reset = () => {
-        setFullname("");
-        setEmail("");
-        setPassword("");
-    };
-
-    const handleSubmit = async event => {
-        event.preventDefault();
-        const user = {
-            fullname,
-            email,
-            password
-        };
-
-        try {
-            const { status } = await registerUser(user);
-            if (status === 201) {
-                toast.success("کاربر با موفقیت ساخته شد.", {
-                    position: "top-right",
-                    closeOnClick: true
-                });
-                reset();
-            }
-        } catch (ex) {
-            toast.error("مشکلی پیش آمده.", {
-                position: "top-right",
-                closeOnClick: true
-            });
-            console.log(ex);
-        }
-    };
+    const {
+        fullname,
+        setFullname,
+        email,
+        setEmail,
+        password,
+        setPassword,
+        policy,
+        setPolicy,
+        handleRegister,
+        validator
+    } = registerContext;
 
     return (
         <main className="client-page">
@@ -45,21 +24,35 @@ const Register = () => {
                 <header>
                     <h2> عضویت در سایت </h2>
                 </header>
+                <Helmet>
+                    <title>تاپلرن | عضویت در سایت</title>
+                </Helmet>
 
                 <div className="form-layer">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={e => handleRegister(e)}>
                         <div className="input-group">
                             <span className="input-group-addon" id="username">
                                 <i className="zmdi zmdi-account"></i>
                             </span>
                             <input
                                 type="text"
+                                name="fullname"
                                 className="form-control"
                                 placeholder="نام و نام خانوادگی"
                                 aria-describedby="username"
                                 value={fullname}
-                                onChange={e => setFullname(e.target.value)}
+                                onChange={e => {
+                                    setFullname(e.target.value);
+                                    validator.current.showMessageFor(
+                                        "fullname"
+                                    );
+                                }}
                             />
+                            {validator.current.message(
+                                "fullname",
+                                fullname,
+                                "required|min:5"
+                            )}
                         </div>
 
                         <div className="input-group">
@@ -71,12 +64,21 @@ const Register = () => {
                             </span>
                             <input
                                 type="text"
+                                name="email"
                                 className="form-control"
                                 placeholder="ایمیل"
                                 aria-describedby="email-address"
                                 value={email}
-                                onChange={e => setEmail(e.target.value)}
+                                onChange={e => {
+                                    setEmail(e.target.value);
+                                    validator.current.showMessageFor("email");
+                                }}
                             />
+                            {validator.current.message(
+                                "email",
+                                email,
+                                "required|email"
+                            )}
                         </div>
 
                         <div className="input-group">
@@ -85,19 +87,45 @@ const Register = () => {
                             </span>
                             <input
                                 type="password"
+                                name="password"
                                 className="form-control"
                                 placeholder="رمز عبور "
                                 aria-describedby="password"
                                 value={password}
-                                onChange={e => setPassword(e.target.value)}
+                                onChange={e => {
+                                    setPassword(e.target.value);
+                                    validator.current.showMessageFor(
+                                        "password"
+                                    );
+                                }}
                             />
+                            {validator.current.message(
+                                "password",
+                                password,
+                                "required|min:5"
+                            )}
                         </div>
 
                         <div className="accept-rules">
                             <label>
-                                <input type="checkbox" name="" /> قوانین و
-                                مقررات سایت را میپذیرم{" "}
+                                <input
+                                    type="checkbox"
+                                    name="policy"
+                                    value={policy}
+                                    onChange={e => {
+                                        setPolicy(e.currentTarget.checked);
+                                        validator.current.showMessageFor(
+                                            "policy"
+                                        );
+                                    }}
+                                />{" "}
+                                قوانین و مقررات سایت را میپذیرم{" "}
                             </label>
+                            {validator.current.message(
+                                "policy",
+                                policy,
+                                "required"
+                            )}
                         </div>
 
                         <div className="link">

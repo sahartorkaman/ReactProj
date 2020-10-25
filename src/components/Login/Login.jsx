@@ -1,40 +1,19 @@
-import React, { useState } from "react";
-import { withRouter } from "react-router-dom";
-import { loginUser } from "../../services/userService";
-import { toast } from "react-toastify";
+import React, { useContext } from "react";
 
-const Login = ({ history }) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+import Helmet from "react-helmet";
+import { context } from "./../context/context";
 
-    const reset = () => {
-        setEmail("");
-        setPassword("");
-    };
+const Login = () => {
+    const loginContext = useContext(context);
 
-    const handleSubmit = async event => {
-        event.preventDefault();
-        const user = { email, password };
-
-        try {
-            const { status, data } = await loginUser(user);
-            if (status === 200) {
-                toast.success("ورود موفقیت آمیز بود.", {
-                    position: "top-right",
-                    closeOnClick: true
-                });
-                localStorage.setItem("token", data.token);
-                history.replace("/");
-                reset();
-            }
-        } catch (ex) {
-            console.log(ex);
-            toast.error("مشکلی پیش آمده.", {
-                position: "top-right",
-                closeOnClick: true
-            });
-        }
-    };
+    const {
+        email,
+        setEmail,
+        password,
+        setPassword,
+        handleLogin,
+        validator
+    } = loginContext;
 
     return (
         <main className="client-page">
@@ -42,9 +21,12 @@ const Login = ({ history }) => {
                 <header>
                     <h2> ورود به سایت </h2>
                 </header>
+                <Helmet>
+                    <title>تاپلرن | ورود به سایت</title>
+                </Helmet>
 
                 <div className="form-layer">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={e => handleLogin(e)}>
                         <div className="input-group">
                             <span
                                 className="input-group-addon"
@@ -54,12 +36,21 @@ const Login = ({ history }) => {
                             </span>
                             <input
                                 type="text"
+                                name="email"
                                 className="form-control"
                                 placeholder="ایمیل"
                                 aria-describedby="email-address"
                                 value={email}
-                                onChange={e => setEmail(e.target.value)}
+                                onChange={e => {
+                                    setEmail(e.target.value);
+                                    validator.current.showMessageFor("email");
+                                }}
                             />
+                            {validator.current.message(
+                                "email",
+                                email,
+                                "required|email"
+                            )}
                         </div>
 
                         <div className="input-group">
@@ -68,12 +59,23 @@ const Login = ({ history }) => {
                             </span>
                             <input
                                 type="password"
+                                name="password"
                                 className="form-control"
                                 placeholder="رمز عبور "
                                 aria-describedby="password"
                                 value={password}
-                                onChange={e => setPassword(e.target.value)}
+                                onChange={e => {
+                                    setPassword(e.target.value);
+                                    validator.current.showMessageFor(
+                                        "password"
+                                    );
+                                }}
                             />
+                            {validator.current.message(
+                                "password",
+                                password,
+                                "required|min:5"
+                            )}
                         </div>
 
                         <div className="remember-me">
@@ -107,4 +109,4 @@ const Login = ({ history }) => {
     );
 };
 
-export default withRouter(Login);
+export default Login;

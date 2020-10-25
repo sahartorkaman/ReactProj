@@ -6,8 +6,9 @@ import { ToastContainer } from "react-toastify";
 
 const App = () => {
     useEffect(() => {
-        require('../Utiles/script');
+        require("../utils/script");
     }, []);
+
     return (
         <BrowserRouter>
             <Toplearn />
